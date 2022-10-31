@@ -18,6 +18,7 @@ class CreateUserDetailsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('kelas_id');
             $table->text('address');
             $table->string('phone');
             $table->string('nama_anak');
@@ -29,6 +30,11 @@ class CreateUserDetailsTable extends Migration
             ->onUpdate(DB::raw('NO ACTION'))
             ->onDelete(DB::raw('NO ACTION'));
 
+            // $table->foreign('kelas_id')
+            // ->references('id')
+            // ->on('kelas')
+            // ->onUpdate(DB::raw('NO ACTION'))
+            // ->onDelete(DB::raw('NO ACTION'));
         });
     }
 

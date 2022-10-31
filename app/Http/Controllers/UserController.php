@@ -34,7 +34,7 @@ class UserController extends Controller
         $user = User::where('id',$id)->first();
 
         if($user){
-            return apiResponse(200,'success', 'data'>$user->name,$user->user_detail);
+            return apiResponse(200,'success', 'data'>$user->name,$user->user_detail,$user->kelas_id);
         }
             return apiResponse(400,'success','User Tidak Ditemukan :(');
     }
@@ -47,6 +47,7 @@ class UserController extends Controller
             'phone'=>'required|min:10',
             'nama_anak'=>'required',
             'kelamin'=>'required',
+
         ];
         $message =[
             'name.required'=>'mohon isikan nama anda',
@@ -74,6 +75,7 @@ class UserController extends Controller
                 ]);
                 UserDetail::where('id',$id)->update([
                     'user_id'=>$id,
+                    'kelas_id'=>$request->kelas_id,
                     'address'=>$request->address,
                     'phone'=>$request->phone,
                     'nama_anak'=>$request->nama_anak,
