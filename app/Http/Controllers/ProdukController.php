@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Produk;
+use App\produk_galeris;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -20,29 +21,45 @@ class ProdukController extends Controller
     public function show($id){
         $produk = produk::where('id', $id)->first();
 
+        
         if ($produk) {
             return apiResponse(200, 'success', 'data' > $produk->item,$produk->produk_galeris);
         }
         return apiResponse(400, 'success', 'Produk Tidak Ditemukan :(');
     }
 //create produk
-    public function store(Request $request, $id){
+    public function store(Request $request){
         // $request->validated();
         try{
-            DB::transaction(function ()use($request, $id) {
+            DB::transaction(function ()use($request) {
+
+                $extension = $request->file('image')->getClientOriginalExtension();
+                $image = strtotime(date('Y-m-d H:i:s')).'.'.$extension;
+                $destination = base_path('public/images/');
+                $request->file('image')->move($destination,$image);
+
                 $id = Produk::insertGetId([
-                    'produk'=>$request->item,
+                    'item'=>$request->item,
                     'harga'=>$request->harga,
                     'stok'=>$request->stok,
                     'keterangan'=>$request->keterangan,
                     'created_at'=>date('Y-m-d H-i-s')
                 ]);
+
+                DB::table('produk_galeris')->insert([
+                    'galeri' => $image,
+                    'produk_id' => $id,
+                    'created_at'=>date('Y-m-d H-i-s')
+                ]);
+
+
             });
             return apiResponse(201, 'success', 'berhasil menambah data');
         } catch(Exception $e) {
             return apiResponse(400, 'error', 'error', $e);
         }
     }
+    //update for product, only for admin
     public function update(Request $request, $id){
         $rules =[
             'item'=>'required',
@@ -80,4 +97,14 @@ class ProdukController extends Controller
             return apiResponse(400, 'error', 'error', $e);
         }
     }
+    public function destroy($id){
+        try {
+            DB::transaction(function ()use($id) {
+                Produk::where('id',$id)->delete();
+            });
+            return apiResponse(200,'success', 'data berhasil dispoksi');
+    } catch (Exception $e) {
+        return apiResponse(400, 'error', 'error', $e);
+    }
+}
 }

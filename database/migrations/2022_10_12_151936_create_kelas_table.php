@@ -18,7 +18,7 @@ class CreateKelasTable extends Migration
             $table->timestamps();
             $table->string('kelas');
             $table->string('keterangan');
-            $table->string('harga');
+            $table->decimal('harga');
         });
     }
 
