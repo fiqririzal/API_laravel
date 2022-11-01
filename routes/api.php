@@ -17,8 +17,10 @@ require_once('includes/auth.php');
 
 Route::group( ['middleware' => 'auth:api'], function() {
 
+    require_once('includes/cart_register.php');
     require_once('includes/kelas.php');
     require_once('includes/produk.php');
+    require_once('includes/ekskul.php');
         Route::middleware('admin')->group(function(){
             require_once('includes/user.php');
             require_once('includes/staff.php');

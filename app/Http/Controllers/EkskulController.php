@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Kelas;
 use Exception;
+
+use App\Ekskul;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class KelasController extends Controller
-{
-    public function index()
-    {
-        $kelas = Kelas::all();
 
-        return apiResponse(200, 'success', 'List user', $kelas);
+class EkskulController extends Controller
+{
+    public function index(){
+        $ekskul = Ekskul::all();
+
+        return apiResponse(200, 'success', 'List kelas', $ekskul);
     }
     public function store(Request $request){
         try{
             DB::transaction(function ()use($request) {
-                Kelas::insertGetId([
-                    'kelas'=>$request->kelas,
-                    'keterangan'=>$request->keterangan,
+                Ekskul::insertGetId([
+                    'ekskul'=>$request->ekskul,
+                    'deskripsi'=>$request->deskripsi,
                     'harga'=>$request->harga,
                     'created_at'=>date('Y-m-d H-i-s')
                 ]);
@@ -32,42 +33,32 @@ class KelasController extends Controller
             return apiResponse(400, 'error', 'error', $e);
         }
     }
-    public function show($id)
-    {
-        $kelas = kelas::where('id', $id)->first();
-
-        if ($kelas) {
-            return apiResponse(200, 'success', 'data' > $kelas->kelas);
-        }
-        return apiResponse(400, 'success', 'User Tidak Ditemukan :(');
-    }
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id){
         $rules = [
-            'kelas' => 'required',
-            'keterangan' => 'required',
+            'ekskul' => 'required',
+            'deskripsi' => 'required',
             'harga' => 'required',
         ];
         $message = [
-            'kelas.required' => 'mohon isikan nama anda',
-            'keterangan.required' => 'mohon isikan keterangan kelas nya',
+            'ekskul.required' => 'mohon isikan ekskul anda',
+            'deskrispi.required' => 'mohon isikan keterangan kelas nya',
             'harga.required' => 'mohon isikan harga kelas',
         ];
         $validator = Validator::make($request->all(), $rules, $message);
         if ($validator->fails()) {
-            return apiResponse(400, 'error', 'Data tidak lengkap ', $validator->errors());
+            return apiResponse(400, 'error', 'Lenkgapin dong ekskulnya teman ku', $validator->errors());
         }
         try  {
             DB::transaction(function () use ($request, $id) {
-                Kelas::where('id', $id)->update([
-                    'kelas' => $request->kelas,
-                    'keterangan' => $request->keterangan,
+                Ekskul::where('id', $id)->update([
+                    'ekskul' => $request->ekskul,
+                    'deskripsi' => $request->deskripsi,
                     'harga' => $request->harga,
                     'updated_at' => date('Y-m-d H-i-s')
                 ]);
 
             });
-            return apiResponse(202, 'success', 'user berhasil disunting');
+            return apiResponse(202, 'success', 'Selamat, berhasil menambah data ekskul');
         } catch (Exception $e) {
             return apiResponse(400, 'error', 'error', $e);
         }
@@ -76,7 +67,7 @@ class KelasController extends Controller
     {
         try {
             DB::transaction(function () use ($id) {
-                Kelas::where('id', $id)->delete();
+                Ekskul::where('id', $id)->delete();
             });
             return apiResponse(202, 'success', 'data berhasil dihapus');
         } catch (Exception $e) {

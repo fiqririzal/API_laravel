@@ -16,7 +16,7 @@ class KelasSeed extends Seeder
         $id = Kelas::insertGetId([
             'kelas'=>'coding',
             'keterangan'=>'mantap',
-            'harga'=>'jjhhfgd',
+            'harga'=>10000,
             'created_at' => date('Y-m-d H:i:s')
 
         ]);
@@ -24,7 +24,7 @@ class KelasSeed extends Seeder
             $id = Kelas::insertGetId([
                 'kelas'=>$faker->name,
                 'keterangan'=>$faker->name,
-                'harga'=>$faker->phoneNumber(),
+                'harga'=>10000,
                 'created_at' => date('Y-m-d H:i:s')
 
             ]);
